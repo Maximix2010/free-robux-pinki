@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Бесплатные Robux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* фон из public/footage.jpg */
+        body {
+            background-image: url('/footage.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-position 0.3s ease;
+        }
+
+        /* смещение вправо на телефонах (чтобы фигурка была видна) */
+        @media (max-width: 768px) {
+            body {
+                background-position: left center;
+            }
+        }
+
+        /* стеклянный эффект */
+        .glass {
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.2));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .transition-fast { transition: all .18s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-slate-100 relative">
+<!-- затемнение -->
+<div class="absolute inset-0 bg-black/0"></div>
+
+<main class="relative z-10 w-full max-w-3xl p-6 md:p-10">
+    <div class="glass rounded-2xl p-8 md:p-12 shadow-2xl">
+        <header class="flex items-center gap-4 mb-6 md:mb-8">
+            <div class="w-14 h-14 flex items-center justify-center rounded-lg bg-emerald-500/20 overflow-hidden">
+                <img src="/plus.jpg" alt="Логотип" class="w-10 h-10 object-contain" />
+            </div>
+            <div>
+                <h1 class="text-3xl font-semibold leading-tight text-emerald-200">Бесплатные Robux</h1>
+                <p class="text-base text-slate-300 mt-1"></p>
+            </div>
+        </header>
+
+        <!-- Шаг 1 -->
+        <section id="step1" class="space-y-6">
+            <div class="text-xl text-slate-300">Введите имя аккаунта и выберите платформу</div>
+            <form id="userForm" class="space-y-6">
+                <div>
+                    <label class="block text-base mb-2">Имя Roblox (юзернейм)</label>
+                    <input id="username" required type="text" placeholder="Например: Player123"
+                           class="w-full px-5 py-4 text-xl rounded-lg bg-white/5 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-fast" />
+                </div>
+
+                <div>
+                    <div class="text-base mb-3">Платформа</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <button type="button" data-platform="android" class="platform-btn px-3 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-fast text-base">Android</button>
+                        <button type="button" data-platform="ios" class="platform-btn px-3 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-fast text-base">iOS</button>
+                        <button type="button" data-platform="windows" class="platform-btn px-3 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-fast text-base">Windows</button>
+                        <button type="button" data-platform="playstation" class="platform-btn px-3 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-fast text-base">PlayStation</button>
+                        <button type="button" data-platform="xbox" class="platform-btn px-3 py-3 rounded-lg col-span-2 sm:col-span-1 bg-white/10 hover:bg-white/20 transition-fast text-base">Xbox</button>
+                    </div>
+                    <input type="hidden" id="platform" value="">
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button id="toAmounts" class="px-6 py-4 text-xl rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-medium shadow">Далее</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Шаг 2 -->
+        <section id="step2" class="hidden space-y-6">
+            <div class="text-xl text-slate-300">Выберите количество Robux</div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button class="amount-btn px-4 py-5 text-xl rounded-lg bg-white/10 hover:bg-white/20 transition-fast">1500</button>
+                <button class="amount-btn px-4 py-5 text-xl rounded-lg bg-white/10 hover:bg-white/20 transition-fast">2500</button>
+                <button class="amount-btn px-4 py-5 text-xl rounded-lg bg-white/10 hover:bg-white/20 transition-fast">5000</button>
+                <button class="amount-btn px-4 py-5 text-xl rounded-lg bg-white/10 hover:bg-white/20 transition-fast">10000</button>
+            </div>
+            <div class="flex justify-between items-center">
+                <button id="backToStep1" class="text-base text-slate-300 hover:underline">← Назад</button>
+                <button id="startGen" disabled class="px-6 py-4 text-xl rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-medium shadow">Начать генерацию</button>
+            </div>
+        </section>
+
+        <!-- Шаг 3 -->
+        <section id="step3" class="hidden space-y-6">
+            <div class="text-xl text-slate-300">Процесс генерации</div>
+            <div class="space-y-3">
+                <div class="w-full bg-white/10 rounded-lg h-4 overflow-hidden">
+                    <div id="progressBar" class="h-full w-0 bg-gradient-to-r from-lime-400 to-emerald-500 transition-all"></div>
+                </div>
+                <div class="flex justify-between text-sm text-slate-400">
+                    <span id="progressLabel">Подготовка...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="bg-white/5 rounded-lg p-4 text-center">
+                <div class="text-base text-slate-300">Найдено Robux</div>
+                <div id="counter" class="text-5xl font-bold mt-2">0</div>
+                <div id="counterTarget" class="text-sm text-slate-400 mt-1">Цель: —</div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button id="cancelGen" class="text-base text-slate-300 hover:underline">Отмена</button>
+                <div class="flex items-center gap-3">
+                    <div id="statusBadge" class="px-3 py-2 text-sm rounded-lg bg-yellow-500/20 text-yellow-300">В процессе</div>
+                    <button id="forceVerify" class="px-5 py-3 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-base">Верификация</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Шаг 4 -->
+        <section id="step4" class="hidden space-y-6 text-center">
+            <div id="finalMsg" class="text-xl font-semibold text-emerald-300">Успешно — промежуточный этап пройден</div>
+            <p class="text-base text-slate-300">Для завершения требуется верификация аккаунта.</p>
+            <button id="openVerifyModal" class="px-8 py-4 rounded-lg text-xl bg-emerald-600 hover:bg-emerald-700 text-white">Перейти к верификации</button>
+        </section>
+
+        <footer class="mt-8 text-sm text-slate-400 text-center">
+            <strong>Важно:</strong> Мы не собираем пароли.
+        </footer>
+    </div>
+</main>
+
+<!-- Модалка верификации -->
+<div id="verifyModal" class="fixed inset-0 hidden items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative glass rounded-2xl p-8 w-full max-w-md text-slate-100">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-xl font-semibold text-emerald-300">Верификация</h3>
+                <p class="text-sm text-slate-300 mt-1">Подпишитесь на Telegram-канал, чтобы завершить процесс.</p>
+            </div>
+            <button id="closeModal" class="text-slate-300 hover:text-white text-xl leading-none">✕</button>
+        </div>
+
+        <div class="mt-4 space-y-2 text-left text-sm text-slate-300">
+            <ol class="list-decimal list-inside space-y-1">
+                <li>Нажмите кнопку ниже, чтобы открыть Telegram.</li>
+                <li>Подпишитесь на наш канал.</li>
+                <li>Вернитесь сюда — подтверждение появится автоматически.</li>
+            </ol>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3">
+            <a id="telegramLink" href="https://t.me/Uncebot" target="_blank" class="px-5 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-base">Открыть Telegram</a>
+            <button id="closeModal2" class="px-5 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white text-base">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Платформа
+    const platformBtns = document.querySelectorAll('.platform-btn');
+    const platformInput = document.getElementById('platform');
+    platformBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            platformBtns.forEach(b => b.classList.remove('ring-2','ring-emerald-400'));
+            btn.classList.add('ring-2','ring-emerald-400');
+            platformInput.value = btn.dataset.platform;
+        });
+    });
+
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const step4 = document.getElementById('step4');
+
+    document.getElementById('toAmounts').addEventListener('click', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const platform = platformInput.value;
+        if (!username) return alert('Введите имя аккаунта');
+        if (!platform) return alert('Выберите платформу');
+        step1.classList.add('hidden');
+        step2.classList.remove('hidden');
+    });
+
+    document.getElementById('backToStep1').addEventListener('click', () => {
+        step2.classList.add('hidden');
+        step1.classList.remove('hidden');
+    });
+
+    let chosenAmount = 0;
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('ring-2','ring-amber-400'));
+            btn.classList.add('ring-2','ring-amber-400');
+            chosenAmount = parseInt(btn.textContent.trim(), 10);
+            document.getElementById('startGen').disabled = false;
+        });
+    });
+
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressPercent = document.getElementById('progressPercent');
+    const counterEl = document.getElementById('counter');
+    const counterTarget = document.getElementById('counterTarget');
+    const statusBadge = document.getElementById('statusBadge');
+
+    document.getElementById('startGen').addEventListener('click', () => {
+        step2.classList.add('hidden');
+        step3.classList.remove('hidden');
+        counterEl.textContent = '0';
+        counterTarget.textContent = 'Цель: ' + chosenAmount.toLocaleString();
+
+        const phases = [
+            {label: 'Подготовка...', duration: 800},
+            {label: 'Генерация ключей...', duration: 1300},
+            {label: 'Проверка аккаунта...', duration: 1200},
+            {label: 'Соединение с платформой...', duration: 1100},
+            {label: 'Применение Robux...', duration: 900},
+        ];
+
+        let total = phases.reduce((s,p)=>s+p.duration,0);
+        let elapsed = 0;
+        const interval = setInterval(() => {
+            elapsed += 200;
+            const percent = Math.min(100, Math.floor((elapsed/total)*100));
+            progressBar.style.width = percent+'%';
+            progressPercent.textContent = percent+'%';
+            const phaseIndex = Math.min(phases.length-1, Math.floor((elapsed/total)*phases.length));
+            progressLabel.textContent = phases[phaseIndex].label;
+            const visibleTarget = Math.floor(chosenAmount * (percent/100));
+            const current = parseInt(counterEl.textContent.replace(/\s/g,''),10);
+            if (visibleTarget > current) counterEl.textContent = visibleTarget.toLocaleString();
+
+            if (percent >= 100) {
+                clearInterval(interval);
+                setTimeout(()=>{
+                    step3.classList.add('hidden');
+                    step4.classList.remove('hidden');
+                },700);
+            }
+        },200);
+    });
+
+    document.getElementById('forceVerify').addEventListener('click', () => {
+        document.getElementById('verifyModal').classList.remove('hidden');
+        document.getElementById('verifyModal').classList.add('flex');
+    });
+
+    ['closeModal','closeModal2'].forEach(id=>{
+        document.getElementById(id).addEventListener('click',()=>{
+            document.getElementById('verifyModal').classList.add('hidden');
+            document.getElementById('verifyModal').classList.remove('flex');
+        });
+    });
+    document.getElementById('openVerifyModal').addEventListener('click', () => {
+        document.getElementById('verifyModal').classList.remove('hidden');
+        document.getElementById('verifyModal').classList.add('flex');
+    });
+</script>
+</body>
+</html>
